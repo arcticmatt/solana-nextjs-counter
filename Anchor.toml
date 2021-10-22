@@ -1,0 +1,12 @@
+[programs.localnet]
+solana_nextjs = "GYw2NyDL6ajngPSCd6tEAcUKhqX4gJbtpPpNajbrYb6x"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/mlim/.config/solana/id.json"
+
+[scripts]
+test = "mocha -t 1000000 tests/"
