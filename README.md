@@ -6,7 +6,18 @@ Adapted from https://github.com/arcticmatt/solana-nextjs.
 
 ## Deployment
 
-See https://www.brianfriel.xyz/learning-how-to-build-on-solana/ ("Deploying our completed work for the rest of the world to see" section).
+### localhost
+
+1. `solana config set --url localhost`
+2. Modify network in `Anchor.toml`
+3. `anchor build`
+4. `node copyIdl`
+5. Update program IDs in `Anchor.toml` and `lib.rs`
+6. `solana-test-validator`
+7. `anchor deploy`
+8. Update `ConnectionEndpoint`
+8. Update network settings in Phantom wallet
+
 
 ## Useful Commands
 

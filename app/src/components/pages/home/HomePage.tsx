@@ -1,91 +1,99 @@
-import { Connection, PublicKey } from "@solana/web3.js";
+import { BN, web3 } from "@project-serum/anchor";
 import {
   ConnectionProvider,
   WalletProvider,
   useAnchorWallet,
 } from "@solana/wallet-adapter-react";
-import { Idl, Program, Provider, web3 } from "@project-serum/anchor";
 import {
   WalletModalProvider,
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
+import { useEffect, useState } from "react";
 
+import { AccountsContextProvider } from "src/context/AccountsContext";
+import CONNECTION_ENDPOINT from "src/constants/ConnectionEndpoint";
+import { Maybe } from "src/types/UtilityTypes";
 import ResponsiveContainer from "src/components/ResponsiveContainer";
 import { getPhantomWallet } from "@solana/wallet-adapter-wallets";
-import idl from "src/idl.json";
+import getProvider from "src/utils/getProvider";
 import styles from "@/css/pages/home/HomePage.module.css";
-import { useState } from "react";
+import useAccountsContext from "src/hooks/useAccountsContext";
+import useProgram from "src/hooks/useProgram";
 
 const wallets = [
   /* view list of available wallets at https://github.com/solana-labs/wallet-adapter#wallets */
   getPhantomWallet(),
 ];
 
-const { SystemProgram, Keypair } = web3;
-/* create an account  */
-const baseAccount = Keypair.generate();
-const opts: { preflightCommitment: "processed" } = {
-  preflightCommitment: "processed",
-};
-const programID = new PublicKey(idl.metadata.address);
+const { SystemProgram } = web3;
 
 function App(): JSX.Element {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<Maybe<number>>(null);
   const wallet = useAnchorWallet();
+  const program = useProgram();
+  const { baseAccount, baseAccountBump } = useAccountsContext();
 
-  async function getProvider() {
-    /* create the provider and return it to the caller */
-    /* network set to local network for now */
-    const network = "http://127.0.0.1:8899";
-    const connection = new Connection(network, opts.preflightCommitment);
+  useEffect(() => {
+    async function run() {
+      if (program == null || baseAccount == null) {
+        return;
+      }
+      try {
+        const account = await program.account.baseAccount.fetch(baseAccount);
+        setValue(Number(account.count.toString()));
+      } catch (e) {
+        console.log("initial fetch tx error: ", e);
+      }
+    }
 
-    const provider = new Provider(connection, wallet!, opts);
-    return provider;
-  }
+    run();
+  }, [program, baseAccount]);
 
   async function createCounter() {
-    const provider = await getProvider();
-    /* create the program interface combining the idl, program ID, and provider */
-    const program = new Program(idl as Idl, programID, provider);
+    if (
+      program == null ||
+      wallet == null ||
+      baseAccount == null ||
+      baseAccountBump == null
+    ) {
+      return;
+    }
+
+    const provider = getProvider(wallet);
+
     try {
       /* interact with the program via rpc */
-      await program.rpc.create({
+      await program.rpc.create(new BN(baseAccountBump), {
         accounts: {
-          baseAccount: baseAccount.publicKey,
+          baseAccount,
           user: provider.wallet.publicKey,
           systemProgram: SystemProgram.programId,
         },
-        signers: [baseAccount],
       });
 
-      const account = await program.account.baseAccount.fetch(
-        baseAccount.publicKey
-      );
-      console.log("account: ", account);
-      setValue(account.count.toString());
-    } catch (err) {
-      console.log("Transaction error: ", err);
+      const account = await program.account.baseAccount.fetch(baseAccount);
+      setValue(Number(account.count.toString()));
+    } catch (e) {
+      console.log("createCounter tx error: ", e);
     }
   }
 
   async function increment() {
-    const provider = await getProvider();
-    const program = new Program(idl as Idl, programID, provider);
+    if (program == null || baseAccount == null) {
+      return;
+    }
+
     await program.rpc.increment({
       accounts: {
-        baseAccount: baseAccount.publicKey,
+        baseAccount,
       },
     });
 
-    const account = await program.account.baseAccount.fetch(
-      baseAccount.publicKey
-    );
-    console.log("account: ", account);
-    setValue(account.count.toString());
+    const account = await program.account.baseAccount.fetch(baseAccount);
+    setValue(Number(account.count.toString()));
   }
 
   if (wallet == null) {
-    /* If the user's wallet is not connected, display connect wallet button. */
     return (
       <div className={styles.container}>
         <WalletMultiButton />
@@ -94,21 +102,18 @@ function App(): JSX.Element {
   }
   return (
     <div className={styles.container}>
-      {!value && (
+      {value == null && (
         <button onClick={createCounter} type="button">
           Create counter
         </button>
       )}
-      {value && (
-        <button onClick={increment} type="button">
-          Increment counter
-        </button>
-      )}
-
-      {value && value >= Number(0) ? (
-        <h2>{value}</h2>
-      ) : (
-        <h3>Please create the counter.</h3>
+      {value != null && (
+        <>
+          <button onClick={increment} type="button">
+            Increment counter
+          </button>
+          <h2>{value}</h2>
+        </>
       )}
     </div>
   );
@@ -117,12 +122,14 @@ function App(): JSX.Element {
 /* wallet configuration as specified here: https://github.com/solana-labs/wallet-adapter#setup */
 export default function HomePage(): JSX.Element {
   return (
-    <ConnectionProvider endpoint="http://127.0.0.1:8899">
+    <ConnectionProvider endpoint={CONNECTION_ENDPOINT}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <ResponsiveContainer>
-            <App />
-          </ResponsiveContainer>
+          <AccountsContextProvider>
+            <ResponsiveContainer>
+              <App />
+            </ResponsiveContainer>
+          </AccountsContextProvider>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
