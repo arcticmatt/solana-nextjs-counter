@@ -1,14 +1,15 @@
 use anchor_lang::prelude::*;
 
-declare_id!("bznhrZuksQzrY6fw3pb86HLFpg86zjngQ7nTiAF4QXv");
+declare_id!("7G18d74wQeXvHVmapcwgfn1vZ3PdgTK8XFhcCKZcUKPk");
 
 #[program]
 mod solana_nextjs_counter {
     use super::*;
 
-    pub fn create(ctx: Context<Create>) -> ProgramResult {
+    pub fn create(ctx: Context<Create>, bump: u8) -> ProgramResult {
         let base_account = &mut ctx.accounts.base_account;
         base_account.count = 0;
+        base_account.bump = bump;
         Ok(())
     }
 
@@ -21,10 +22,10 @@ mod solana_nextjs_counter {
 
 // Transaction instructions
 #[derive(Accounts)]
+#[instruction(bump: u8)]
 pub struct Create<'info> {
-    #[account(init, payer = user, space = 16 + 16)]
+    #[account(init, seeds = [b"base_account".as_ref()], bump = bump, payer = user)]
     pub base_account: Account<'info, BaseAccount>,
-    #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
@@ -32,12 +33,14 @@ pub struct Create<'info> {
 // Transaction instructions
 #[derive(Accounts)]
 pub struct Increment<'info> {
-    #[account(mut)]
+    #[account(mut, seeds = [b"base_account".as_ref()], bump = base_account.bump)]
     pub base_account: Account<'info, BaseAccount>,
 }
 
 // An account that goes inside a transaction instruction
 #[account]
+#[derive(Default)]
 pub struct BaseAccount {
     pub count: u64,
+    pub bump: u8,
 }

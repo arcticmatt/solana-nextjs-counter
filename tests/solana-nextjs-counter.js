@@ -8,36 +8,40 @@ describe("solana_nextjs_counter", () => {
   anchor.setProvider(provider);
   const program = anchor.workspace.SolanaNextjsCounter;
 
+  let baseAccount, baseAccountBump;
+  before(async () => {
+    [baseAccount, baseAccountBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from("base_account")],
+        program.programId
+      );
+  });
+
   it("Creates a counter)", async () => {
     /* Call the create function via RPC */
-    const baseAccount = anchor.web3.Keypair.generate();
-    await program.rpc.create({
+    await program.rpc.create(new anchor.BN(baseAccountBump), {
       accounts: {
-        baseAccount: baseAccount.publicKey,
+        baseAccount: baseAccount,
         user: provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,
       },
-      signers: [baseAccount],
     });
 
     /* Fetch the account and check the value of count */
-    const account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+    const account = await program.account.baseAccount.fetch(baseAccount);
     console.log('Count 0: ', account.count.toString())
     assert.ok(account.count.toString() == 0);
-    _baseAccount = baseAccount;
 
   });
 
   it("Increments the counter", async () => {
-    const baseAccount = _baseAccount;
-
     await program.rpc.increment({
       accounts: {
-        baseAccount: baseAccount.publicKey,
+        baseAccount: baseAccount,
       },
     });
 
-    const account = await program.account.baseAccount.fetch(baseAccount.publicKey);
+    const account = await program.account.baseAccount.fetch(baseAccount);
     console.log('Count 1: ', account.count.toString())
     assert.ok(account.count.toString() == 1);
   });
