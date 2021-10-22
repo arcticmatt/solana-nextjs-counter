@@ -2,11 +2,11 @@ const assert = require("assert");
 const anchor = require("@project-serum/anchor");
 const { SystemProgram } = anchor.web3;
 
-describe("solana_nextjs", () => {
+describe("solana_nextjs_counter", () => {
   /* create and set a Provider */
   const provider = anchor.Provider.env();
   anchor.setProvider(provider);
-  const program = anchor.workspace.SolanaNextjs;
+  const program = anchor.workspace.SolanaNextjsCounter;
 
   it("Creates a counter)", async () => {
     /* Call the create function via RPC */

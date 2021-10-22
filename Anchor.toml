@@ -1,5 +1,5 @@
 [programs.localnet]
-solana_nextjs = "GYw2NyDL6ajngPSCd6tEAcUKhqX4gJbtpPpNajbrYb6x"
+solana_nextjs_counter = "bznhrZuksQzrY6fw3pb86HLFpg86zjngQ7nTiAF4QXv"
 
 [registry]
 url = "https://anchor.projectserum.com"

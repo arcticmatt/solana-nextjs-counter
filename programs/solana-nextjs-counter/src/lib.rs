@@ -1,9 +1,9 @@
 use anchor_lang::prelude::*;
 
-declare_id!("GYw2NyDL6ajngPSCd6tEAcUKhqX4gJbtpPpNajbrYb6x");
+declare_id!("bznhrZuksQzrY6fw3pb86HLFpg86zjngQ7nTiAF4QXv");
 
 #[program]
-mod solana_nextjs {
+mod solana_nextjs_counter {
     use super::*;
 
     pub fn create(ctx: Context<Create>) -> ProgramResult {

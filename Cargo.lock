@@ -906,7 +906,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "solana-nextjs"
+name = "solana-nextjs-counter"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
