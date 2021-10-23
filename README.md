@@ -1,6 +1,6 @@
 # solana-nextjs-counter
 
-A simple Solana program + frontend. There is a global counter, and everyone is able to increment it once.
+A simple Solana program + frontend. There is a global counter, and everyone is able to increment it.
 
 Check out the live app at https://solana-nextjs-counter.vercel.app/ (it's on devnet).
 
