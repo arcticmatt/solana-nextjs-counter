@@ -2,6 +2,8 @@
 
 A simple Solana program + frontend. There is a global counter, and everyone is able to increment it once.
 
+Check out the live app at https://solana-nextjs-counter.vercel.app/ (it's on devnet).
+
 Adapted from https://github.com/arcticmatt/solana-nextjs.
 
 ## Building
@@ -20,7 +22,6 @@ Adapted from https://github.com/arcticmatt/solana-nextjs.
 4. `anchor deploy`
 5. Update `ConnectionEndpoint`
 6. Update network settings in Phantom wallet
-
 
 ## Useful Commands
 
