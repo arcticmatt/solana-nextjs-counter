@@ -30,10 +30,12 @@ export function AccountsContextProvider(props: ProviderProps): JSX.Element {
 
   useEffect(() => {
     async function run() {
+      console.log("PROGRAM_ID", PROGRAM_ID.toString());
       const [account, bump] = await web3.PublicKey.findProgramAddress(
         [Buffer.from("base_account")],
         PROGRAM_ID
       );
+      console.log("baseAccount", account.toString());
 
       setBaseAccount(account);
       setBaseAccountBump(bump);

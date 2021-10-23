@@ -4,19 +4,22 @@ A simple Solana program + frontend. There is a global counter, and everyone is a
 
 Adapted from https://github.com/arcticmatt/solana-nextjs.
 
+## Building
+
+1. `anchor build`
+2. `anchor test` (this populates `metadata` in the IDL file)
+3. `node copyIdl`
+4. `solana address -k target/deploy/solana_nextjs_counter-keypair.json`
+5. Update program IDs in `Anchor.toml` and `lib.rs`
+
 ## Deployment
 
-### localhost
-
-1. `solana config set --url localhost`
+1. `solana config set --url localhost/devnet/mainnet`
 2. Modify network in `Anchor.toml`
-3. `anchor build`
-4. `node copyIdl`
-5. Update program IDs in `Anchor.toml` and `lib.rs`
-6. `solana-test-validator`
-7. `anchor deploy`
-8. Update `ConnectionEndpoint`
-8. Update network settings in Phantom wallet
+3. `solana-test-validator` (only for `localhost`)
+4. `anchor deploy`
+5. Update `ConnectionEndpoint`
+6. Update network settings in Phantom wallet
 
 
 ## Useful Commands

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("7G18d74wQeXvHVmapcwgfn1vZ3PdgTK8XFhcCKZcUKPk");
+declare_id!("2amnYyb9jAe933VEBSE7YDGZRQgFpYJCeep57oSNSCNt");
 
 #[program]
 mod solana_nextjs_counter {
