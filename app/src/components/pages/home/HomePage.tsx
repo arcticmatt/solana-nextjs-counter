@@ -4,6 +4,7 @@ import {
   WalletProvider,
   useAnchorWallet,
 } from "@solana/wallet-adapter-react";
+import { Maybe, MaybeUndef } from "src/types/UtilityTypes";
 import {
   WalletModalProvider,
   WalletMultiButton,
@@ -12,7 +13,6 @@ import { useEffect, useState } from "react";
 
 import { AccountsContextProvider } from "src/context/AccountsContext";
 import CONNECTION_ENDPOINT from "src/constants/ConnectionEndpoint";
-import { Maybe } from "src/types/UtilityTypes";
 import ResponsiveContainer from "src/components/ResponsiveContainer";
 import { getPhantomWallet } from "@solana/wallet-adapter-wallets";
 import getProvider from "src/utils/getProvider";
@@ -27,8 +27,8 @@ const wallets = [
 
 const { SystemProgram } = web3;
 
-function App(): JSX.Element {
-  const [value, setValue] = useState<Maybe<number>>(null);
+function App(): Maybe<JSX.Element> {
+  const [value, setValue] = useState<MaybeUndef<number>>(undefined);
   const wallet = useAnchorWallet();
   const program = useProgram();
   const { baseAccount, baseAccountBump } = useAccountsContext();
@@ -43,6 +43,7 @@ function App(): JSX.Element {
         setValue(Number(account.count.toString()));
       } catch (e) {
         console.log("initial fetch tx error: ", e);
+        setValue(null);
       }
     }
 
@@ -100,6 +101,11 @@ function App(): JSX.Element {
       </div>
     );
   }
+
+  if (value === undefined) {
+    return null;
+  }
+
   return (
     <div className={styles.container}>
       {value == null && (
