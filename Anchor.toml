@@ -5,7 +5,7 @@ solana_nextjs_counter = "2amnYyb9jAe933VEBSE7YDGZRQgFpYJCeep57oSNSCNt"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/Users/mlim/.config/solana/id.json"
 
 [scripts]

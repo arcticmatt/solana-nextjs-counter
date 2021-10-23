@@ -6,6 +6,10 @@ Check out the live app at https://solana-nextjs-counter.vercel.app/ (it's on dev
 
 Adapted from https://github.com/arcticmatt/solana-nextjs.
 
+## Branches
+
+The `increment-once` branch limits each account to one increment.
+
 ## Building
 
 1. `anchor build`
