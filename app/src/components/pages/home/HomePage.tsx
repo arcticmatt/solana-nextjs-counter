@@ -80,13 +80,24 @@ function App(): Maybe<JSX.Element> {
   }
 
   async function increment() {
-    if (program == null || baseAccount == null) {
+    if (program == null || baseAccount == null || wallet == null) {
       return;
     }
 
-    await program.rpc.increment({
+    const provider = getProvider(wallet);
+
+    const [hasIncremented, hasIncrementedBump] =
+      await web3.PublicKey.findProgramAddress(
+        [provider.wallet.publicKey.toBuffer()],
+        program.programId
+      );
+
+    await program.rpc.increment(new BN(hasIncrementedBump), {
       accounts: {
         baseAccount,
+        hasIncremented,
+        user: provider.wallet.publicKey,
+        systemProgram: SystemProgram.programId,
       },
     });
 

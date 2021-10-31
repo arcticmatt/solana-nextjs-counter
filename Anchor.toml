@@ -1,11 +1,11 @@
 [programs.localnet]
-solana_nextjs_counter = "2amnYyb9jAe933VEBSE7YDGZRQgFpYJCeep57oSNSCNt"
+solana_nextjs_counter = "2zHwAYnZeN8gip3j6HkU5nvKpraVaFJSXfGLZb4FFWE6"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/Users/mlim/.config/solana/id.json"
 
 [scripts]

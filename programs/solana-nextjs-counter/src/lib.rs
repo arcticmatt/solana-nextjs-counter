@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("2amnYyb9jAe933VEBSE7YDGZRQgFpYJCeep57oSNSCNt");
+declare_id!("2zHwAYnZeN8gip3j6HkU5nvKpraVaFJSXfGLZb4FFWE6");
 
 // ===== Goal =====
 // Each account can only increment the counter ONCE.
